@@ -74,7 +74,7 @@ t = t.replace('/*__CHEAT__*/', 'const CHEAT = {};').replace('/*__SUBRES__*/', 'c
 SITE = 'https://alexduncan2100.github.io/cloud-career-roadmaps/'
 desc = 'roadmap.sh-style interactive learning roadmaps for AWS, AWS certifications, DevOps, Kubernetes, Kubernetes certification, Azure, Azure DevOps, DevSecOps, FinOps and Cloud Security, with verified free resources.'
 head = f'''<!doctype html>
-<html lang="tr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">

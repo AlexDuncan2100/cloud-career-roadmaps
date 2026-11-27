@@ -22,9 +22,6 @@ body{background:var(--bg);color:var(--fg);font-family:var(--ui);line-height:1.5}
 .wrap{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 60px}
 header.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
 .brand{font-family:var(--hand);font-weight:700;font-size:1.25rem}
-.lang{display:flex;border:2px solid var(--fg);border-radius:8px;overflow:hidden}
-.lang button{font:600 .85rem var(--ui);padding:6px 14px;border:0;background:transparent;color:var(--fg);cursor:pointer}
-.lang button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
 nav.tabs{display:flex;gap:8px;overflow-x:auto;padding:14px 0 6px;scrollbar-width:thin}
 nav.tabs a{flex:0 0 auto;font:500 .88rem var(--ui);padding:7px 12px;border-radius:999px;background:var(--chip);color:var(--fg);text-decoration:none;border:1.5px solid transparent;white-space:nowrap}
 nav.tabs a[aria-current="page"]{border-color:var(--fg);background:var(--topic);color:#111}
@@ -109,11 +106,7 @@ footer{margin-top:40px;font-size:.8rem;color:var(--muted);text-align:center}
   <header class="top">
     <div class="brand" id="brand">Cloud Career Roadmaps</div>
     <div class="hdr-r">
-      <a class="gh" id="gh" href="https://github.com/AlexDuncan2100/cloud-career-roadmaps" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg><span id="gh-t">GitHub'da yıldız ver</span></a>
-      <div class="lang" role="group" aria-label="Dil / Language">
-        <button id="lang-tr" type="button" aria-pressed="true">Türkçe</button>
-        <button id="lang-en" type="button" aria-pressed="false">English</button>
-      </div>
+      <a class="gh" id="gh" href="https://github.com/AlexDuncan2100/cloud-career-roadmaps" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg><span id="gh-t">Star on GitHub</span></a>
     </div>
   </header>
   <nav class="tabs" id="tabs" aria-label="Roadmaps"></nav>
@@ -154,7 +147,7 @@ const UI = {
        yt:"Resmî ve popüler YouTube kanalları", auth:"Ücretsiz kurslar, kitaplar ve okuma listesi", done:"Tamamlandı olarak işaretle", undone:"Tamamlandı ✓", close:"Kapat",
        res:"Kaynaklar", files:"Ders klasöründeki mülakat soruları", mod:"ADIM", legendT:"Ana adım", legendS:"Alt konu", end:"Bitti! Sonraki haritaya geçin", pdf:"PDF indir",
        note:"Kaynaklar İngilizcedir. Tamamlandı işareti yalnızca bu tarayıcıda saklanır.",
-       foot:"Linkler 27 Kasım 2026'da tek tek açılarak doğrulandı. Yalnızca resmî ve ücretsiz/açık kaynaklar yer alır. Tamamlanma durumu yalnızca bu tarayıcıda saklanır.", gh:"GitHub'da yıldız ver",
+       foot:"Linkler 27 Kasım 2026'da tek tek açılarak doğrulandı. Yalnızca resmî ve ücretsiz/açık kaynaklar yer alır. Tamamlanma durumu yalnızca bu tarayıcıda saklanır.", gh:"Star on GitHub",
        types:{official:"Resmî",video:"Video",article:"Makale",pdf:"PDF",oss:"GitHub",course:"Kurs",book:"Kitap",cheat:"Cheat sheet",lab:"Lab",practice:"Pratik",exam:"Sınav",tool:"Araç",community:"Topluluk",jobs:"İş ilanı"}},
   en: {brand:"Cloud Career Roadmaps", dur:"Steps", prog:(d,t)=>`${d}/${t} steps done`, cheat:"",
        yt:"Official and popular YouTube channels", auth:"Free courses, books and reading list", done:"Mark as done", undone:"Done ✓", close:"Close",
@@ -164,7 +157,7 @@ const UI = {
        types:{official:"Official",video:"Video",article:"Article",pdf:"PDF",oss:"GitHub",course:"Course",book:"Book",cheat:"Cheat sheet",lab:"Lab",practice:"Practice",exam:"Exam",tool:"Tool",community:"Community",jobs:"Jobs"}}
 };
 const store = { get(k){try{return localStorage.getItem(k)}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,v)}catch(e){}} };
-let lang = store.get("rm-lang") === "en" ? "en" : "tr";
+const lang = "en";
 let done = {}; try{ done = JSON.parse(store.get("rm-done")||"{}")||{} }catch(e){ done = {} }
 let current = ROADMAPS[0].id, openIdx = null;
 const $ = id => document.getElementById(id);
@@ -176,7 +169,6 @@ function render(){
   const r = rm(), u = UI[lang];
   document.documentElement.lang = lang;
   $("brand").textContent = u.brand;
-  $("lang-tr").setAttribute("aria-pressed", lang==="tr"); $("lang-en").setAttribute("aria-pressed", lang==="en");
   $("tabs").innerHTML = ROADMAPS.map(x => `<a href="#${x.id}" ${x.id===current?'aria-current="page"':''}>${esc(x.tab)}</a>`).join("");
   $("title").textContent = r.title[lang];
   $("intro").textContent = r.intro[lang];
@@ -225,8 +217,6 @@ $("d-subs").addEventListener("click", e => { const a = e.target.closest("a[data-
 $("d-close").onclick = closeDrawer; $("scrim").onclick = closeDrawer;
 document.addEventListener("keydown", e => { if(e.key==="Escape" && openIdx!==null) closeDrawer(); });
 $("d-done").onclick = () => { const k = key(openIdx); if(done[k]) delete done[k]; else done[k]=1; store.set("rm-done", JSON.stringify(done)); render(); };
-$("lang-tr").onclick = () => { lang="tr"; store.set("rm-lang","tr"); render(); };
-$("lang-en").onclick = () => { lang="en"; store.set("rm-lang","en"); render(); };
 function route(){ const h = location.hash.replace("#",""); if (ROADMAPS.some(r=>r.id===h)) current = h; else current = ROADMAPS[0].id; closeDrawer(); render(); }
 window.addEventListener("hashchange", route);
 /*__INIT__*/
